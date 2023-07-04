@@ -13,7 +13,13 @@ const morgan = require('morgan');
 
 //Setting up MongoDB
 const mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://admin:admin@cluster0.tr5macg.mongodb.net/guestHouseDB");
+mongoose.connect(`mongodb+srv://${process.env.USER_ID}:${process.env.PASS}@cluster0.tr5macg.mongodb.net/${process.env.DB_NAME}`).then(resp => {
+    console.log("Connected to Database");
+}).catch(err => {
+    console.log({
+        error: err,
+    });
+});
 
 //Setting up morgan
 app.use(morgan('dev'));

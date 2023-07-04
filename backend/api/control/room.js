@@ -32,7 +32,7 @@ roomRoute.get("/auth", function (req, res, next) {
     })
 })
 
-//display all rooms available for booking
+//display all rooms available for booking or taking reservations
 roomRoute.get("/", function (req, res, next) {
     Room.find().exec().then(resp => {
         res.status(200).json(
@@ -56,7 +56,8 @@ roomRoute.get("/", function (req, res, next) {
     })
 })
 
-//add checkAuth here -> POST new rooms , available for booking
+
+//add checkAuth here ->Admin may POST new rooms , available for booking
 roomRoute.post("/", function (req, res, next) {
     //Check if such a room exists already and then POST
     Room.find({ roomNum: req.body.roomNum }).exec().then(resp => {
@@ -88,7 +89,7 @@ roomRoute.post("/", function (req, res, next) {
             })
         }
     })
-    }
+}
 )
 
 //add checkAuth here --> allow the admin to check bookings for room with given room num. 
