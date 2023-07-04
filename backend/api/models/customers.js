@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Room, RoomsSchema } = require(__dirname + "/rooms.js");
+
 const CustomerSchema = {
     roomNum: { type: String, ref: 'room' },
     status: { type: Number, ref: 'room' },

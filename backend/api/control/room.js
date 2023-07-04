@@ -1,17 +1,19 @@
 const express = require('express');
 const roomRoute = express.Router();
 const mongoose = require('mongoose');
+
+//import Room and Booking Schema
 const { Room } = require("../models/rooms");
 const { Booking } = require("../models/bookings");
 
+//add checkAuth at this endpoint
 roomRoute.get("/auth", function (req, res, next) {
+    //display all bookings with status:1 i.e waiting for approval
     Booking.find({ status: 1 }).exec().then(resp => {
-        // console.log(resp);
         res.status(200).json(
             {
                 count: resp.length,
                 rooms: resp.map(doc => {
-
                     return {
                         roomId: doc._id,
                         roomNum: doc.roomNum,
@@ -29,13 +31,14 @@ roomRoute.get("/auth", function (req, res, next) {
         })
     })
 })
+
+//display all rooms available for booking
 roomRoute.get("/", function (req, res, next) {
     Room.find().exec().then(resp => {
         res.status(200).json(
             {
                 count: resp.length,
                 rooms: resp.map(doc => {
-
                     return {
                         roomId: doc._id,
                         roomNum: doc.roomNum,
@@ -53,9 +56,9 @@ roomRoute.get("/", function (req, res, next) {
     })
 })
 
-//add checkauth here
-//avoid duplicacy
+//add checkAuth here -> POST new rooms , available for booking
 roomRoute.post("/", function (req, res, next) {
+    //Check if such a room exists already and then POST
     Room.find({ roomNum: req.body.roomNum }).exec().then(resp => {
         if (resp.length != 0) {
             return (res.json({
@@ -85,16 +88,10 @@ roomRoute.post("/", function (req, res, next) {
             })
         }
     })
-}
-
-
-    // res.status(200).json({
-    //     order: order,
-    // })
+    }
 )
 
-//check auth
-// :roomID is replaced using req.params.roomID
+//add checkAuth here --> allow the admin to check bookings for room with given room num. 
 roomRoute.get("/:roomNum", function (req, res, next) {
     Room.find({ roomNum: req.params.roomNum }).then(resp => {
         if (!resp) {
@@ -120,26 +117,5 @@ roomRoute.get("/:roomNum", function (req, res, next) {
         res.status(500).json({ error: err })
     })
 })
-
-// orderRoute.delete("/:orderID", function (req, res, next) {
-//     Order.deleteOne({ _id: req.params.orderID }).exec().then(resp => {
-//         res.status(200).json({
-//             result: resp,
-//             info: {
-//                 type: "GET",
-//                 url: "localhost/3000/orders",
-//                 message: "order deleted successfully"
-//             }
-//         })
-//     }).catch(err => {
-//         res.status(500).json({
-//             error: err,
-//         })
-//     })
-// })
-
-
-
-
 
 module.exports = roomRoute;

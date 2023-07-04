@@ -1,12 +1,14 @@
 const express = require('express');
 const customerRoute = express.Router();
 const mongoose = require('mongoose');
+
+//import Customer, Room, Booking Schema
 const { Customer } = require("../models/customers.js");
 const { Room } = require("../models/rooms.js");
 const { Booking } = require("../models/bookings.js");
 
 
-//check auth - > admin can view all customers 
+//checkAuth-> admin can view all customers 
 customerRoute.get("/", function (req, res, next) {
     Customer.find().exec().then(resp => {
         res.status(200).json({
@@ -15,17 +17,16 @@ customerRoute.get("/", function (req, res, next) {
     })
 })
 
+//Customer may post his/her booking as per requirements
 customerRoute.post("/", function (req, res, next) {
-
     Room.findOne({ roomNum: req.body.roomNum }).exec().then(resp => {
-        //check if room exists``
-        console.log(resp);
+        //check if room exists or not
+        // console.log(resp);
         if (!resp) {
             res.status(400).json({
                 message: "INVALID ROOM NUM"
             })
         }
-        // }
     }
     ).catch(err => {
         console.log(err);
@@ -33,8 +34,12 @@ customerRoute.post("/", function (req, res, next) {
             error: err,
         })
     })
+
+    //If the room exists, post the booking
     let startDate = req.body.checkIn;
     let endDate = req.body.checkOut;
+    
+    //Check if Booking dates overlap with exisiting bookings or not
     Booking.find({
         $or: [
             { checkIn: { $gte: startDate, $lte: endDate } },
@@ -48,13 +53,13 @@ customerRoute.post("/", function (req, res, next) {
         ], roomNum: req.body.roomNum
     }).then(data => {
         if (data.length > 0) {
+            //ROOM ALREADY BOOKED
             return res.json({
                 message: "Room Booked for the time period",
             })
         }
         else {
-            // check if status is vacant
-            // if (resp.status === 0) {
+            // Since room isn't booked-> Alot room to customer
             const customer = new Customer({
                 roomNum: req.body.roomNum,
                 empId: req.body.empId,
@@ -63,6 +68,7 @@ customerRoute.post("/", function (req, res, next) {
                 checkOut: req.body.checkOut.toLocaleString(),
             })
             return customer.save().then(resp => {
+                //Booking Created->Status set to 1-> Waiting for Admin approval
                 Booking.create({ status: 1, resId: resp._id, roomNum: resp.roomNum, checkIn: resp.checkIn, checkOut: resp.checkOut }).then(test => {
                     // console.log(test);
                 })
