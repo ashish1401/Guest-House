@@ -56,5 +56,5 @@ app.use((error, req, res, next) => {
     })
 })
 
-
+//export the express middleware
 module.exports = app;
