@@ -93,7 +93,7 @@ customerRoute.post("/", function (req, res, next) {
         console.log(err);
     })
 })
-
+//get employ details of a particular ID
 customerRoute.get("/:empId", function (req, res, next) {
     Customer.find({ empId: req.params.empId }).exec().then(data => {
         res.send(data)

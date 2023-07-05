@@ -3,6 +3,9 @@ const express = require('express');
 const bookingRoute = express.Router();
 const mongoose = require('mongoose');
 
+
+//Protected Route
+//view all bookings for admin
 bookingRoute.get("/", function (req, res, next) {
     //display all bookings with status:1 i.e waiting for approval
     Booking.find().exec().then(resp => {
@@ -29,6 +32,8 @@ bookingRoute.get("/", function (req, res, next) {
     })
 })
 
+//Protected Route
+//view a particular reservation
 bookingRoute.get("/:resId", function (req, res, next) {
     Booking.find({ resId: req.params.resId }).exec().then(doc => {
         if (doc) {
@@ -53,12 +58,37 @@ bookingRoute.get("/:resId", function (req, res, next) {
     })
 })
 
+//Protected Route
+//Approve booking
 bookingRoute.patch("/:resId", function (req, res, next) {
-    Booking.updateOne({ resId: req.params.resId }, { $set: { status: req.body.status } }).then(data => {
-        res.status(200).json({
-            Message: "Room Approved successfully",
+    if (req.body.status <= 2) {
+        if (req.body.status == 0) {
+            Booking.deleteOne({ resId: req.params.resId }).then(data => {
+                res.status(201).json({
+                    Message: "Room declined",
+                })
+            }).catch(err => {
+                res.status(500).json({
+                    error: err,
+                })
+            })
+        }
+        else if (req.body.status == 2) {
+            Booking.updateOne({ resId: req.params.resId }, { $set: { status: req.body.status } }).then(data => {
+                res.status(200).json({
+                    Message: "Room Approved successfully",
+                })
+            }).catch(err => {
+                res.status(500).json({
+                    error: err,
+                })
+            })
+        }
+    } else {
+        res.json({
+            err: "Invalid status",
         })
-    })
+    }
 })
 
 
