@@ -38,8 +38,8 @@ customerRoute.post("/", function (req, res, next) {
     //If the room exists, post the booking
     let startDate = req.body.checkIn;
     let endDate = req.body.checkOut;
-    
-    //Check if Booking dates overlap with exisiting bookings or not
+
+    //Check if Booking dates overlap with exisiting bookings
     Booking.find({
         $or: [
             { checkIn: { $gte: startDate, $lte: endDate } },
@@ -69,10 +69,10 @@ customerRoute.post("/", function (req, res, next) {
             })
             return customer.save().then(resp => {
                 //Booking Created->Status set to 1-> Waiting for Admin approval
-                Booking.create({ status: 1, resId: resp._id, roomNum: resp.roomNum, checkIn: resp.checkIn, checkOut: resp.checkOut }).then(test => {
+                Booking.create({ status: 1, resId: resp._id, roomNum: resp.roomNum, empId: resp.empId, checkIn: resp.checkIn, checkOut: resp.checkOut }).then(test => {
                     // console.log(test);
                 })
-                res.status(200).json({
+                res.status(201).json({
                     message: 'Reservation made, wait for approval',
                     newReservation: {
                         reservationId: resp._id,
@@ -94,4 +94,13 @@ customerRoute.post("/", function (req, res, next) {
     })
 })
 
+customerRoute.get("/:empId", function (req, res, next) {
+    Customer.find({ empId: req.params.empId }).exec().then(data => {
+        res.send(data)
+    }).catch(err => {
+        res.status(404).json({
+            error: err,
+        })
+    })
+})
 module.exports = customerRoute;

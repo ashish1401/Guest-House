@@ -6,31 +6,6 @@ const mongoose = require('mongoose');
 const { Room } = require("../models/rooms");
 const { Booking } = require("../models/bookings");
 
-//add checkAuth at this endpoint
-roomRoute.get("/auth", function (req, res, next) {
-    //display all bookings with status:1 i.e waiting for approval
-    Booking.find({ status: 1 }).exec().then(resp => {
-        res.status(200).json(
-            {
-                count: resp.length,
-                rooms: resp.map(doc => {
-                    return {
-                        roomId: doc._id,
-                        roomNum: doc.roomNum,
-                        checkIn: doc.checkIn.toLocaleString(),
-                        checkOut: doc.checkOut.toLocaleString(),
-                        resId: doc.resId,
-                        status: doc.status,
-                    }
-                })
-            }
-        );
-    }).catch(err => {
-        res.status(500).json({
-            error: err,
-        })
-    })
-})
 
 //display all rooms available for booking or taking reservations
 roomRoute.get("/", function (req, res, next) {
@@ -75,7 +50,7 @@ roomRoute.post("/", function (req, res, next) {
 
             })
             return room.save().then(resp => {
-                res.status(200).json({
+                res.status(201).json({
                     message: 'Room Registered',
                     newRoom: {
                         _id: resp._id,

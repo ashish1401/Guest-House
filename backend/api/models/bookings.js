@@ -4,6 +4,7 @@ const { Customer } = require(__dirname + "/customers.js")
 const BookingSchema = {
     roomNum: { type: String },
     status: { type: Number, default: 0 },
+    empId: { type: String, required: true, ref: 'customer' },
     resId: { type: mongoose.Schema.Types.ObjectId, ref: 'customer' },
     checkIn: { type: Date, ref: 'customer' },
     checkOut: { type: Date, ref: 'customer' }
