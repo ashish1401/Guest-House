@@ -3,7 +3,7 @@ const { Room, RoomsSchema } = require(__dirname + "/rooms.js");
 
 const CustomerSchema = {
     roomNum: { type: String, ref: 'room' },
-    status: { type: Number, ref: 'room' },
+    status: { type: Number },
     empId: { type: String, required: true, },
     name: { type: String, required: true },
     checkIn: { type: Date, required: true },

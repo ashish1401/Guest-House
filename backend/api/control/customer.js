@@ -55,7 +55,7 @@ customerRoute.post("/", function (req, res, next) {
         if (data.length > 0) {
             //ROOM ALREADY BOOKED
             return res.json({
-                message: "Room Booked for the time period",
+                message: "Room Booked for the time period, Select appropriate duration ",
             })
         }
         else {
