@@ -1,14 +1,48 @@
-import React from 'react';
-import { Link, useLocation } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import axios from 'axios';
 export const Form = (props) => {
+    const navigate = useNavigate();
     const location = useLocation();
     const ROOM_NUM = location.state;
-    console.log(ROOM_NUM);
+    let formState = false;
+    // console.log(ROOM_NUM);
+    // action="http://localhost:3001/customers" method="POST"
+    // name , empId , roomNum , checkIn , checkOut
+    const [post, setPost] = useState({
+        "name": "",
+        "empId": "",
+        "roomNum": ROOM_NUM,
+        "checkIn": "",
+        "checkOut": ""
+    });
+    const handleInput = (event) => {
+        setPost({ ...post, [event.target.name]: event.target.value });
+        console.log(post);
+    }
+    function handleSubmit(event) {
+        setPost(post);
+        console.log(post);
+        // console.log(event.target);
+        event.preventDefault();
+        axios.post("http://localhost:3001/customers", post).then(data => {
+            console.log(data.data);
+            formState = true;
+            navigate("/success", { state: data.data });
+
+        }).catch(err => {
+            console.log(err.response.data);
+            navigate("/err", { state: err.response.data });
+            // window.alert("Room already booked");
+        })
+
+    }
+
     return (
         <div className="flex items-center justify-center p-12 ">
 
             <div className="mx-auto w-full max-w-[550px] border-2 border-black p-4 rounded-md ">
-                <form action="http://localhost:3001/customers" method="POST">
+                <form onSubmit={handleSubmit}>
                     <div className="-mx-3 flex flex-wrap">
                         <div className="w-full px-3 ">
                             <div className="mb-5 text-red-600">
@@ -18,6 +52,9 @@ export const Form = (props) => {
                                     First Name
                                 </label>
                                 <input
+                                    required
+                                    value={post.name}
+                                    onChange={handleInput}
                                     type="text"
                                     name="name"
                                     id="name"
@@ -39,6 +76,9 @@ export const Form = (props) => {
                                     Employee ID
                                 </label>
                                 <input
+                                    required
+                                    value={post.empId}
+                                    onChange={handleInput}
                                     type="text"
                                     name="empId"
                                     id="empId"
@@ -55,6 +95,9 @@ export const Form = (props) => {
                             Enter Valid Room Num
                         </label>
                         <input
+                            required
+                            value={post.roomNum}
+                            onChange={handleInput}
                             type="text"
                             name="roomNum"
                             id="roomNum"
@@ -76,6 +119,9 @@ export const Form = (props) => {
                                     Check-In Date
                                 </label>
                                 <input
+                                    required
+                                    value={post.checkIn}
+                                    onChange={handleInput}
                                     type="date"
                                     name="checkIn"
                                     id="indate"
@@ -92,6 +138,9 @@ export const Form = (props) => {
                                     Check-Out Date
                                 </label>
                                 <input
+                                    required
+                                    value={post.checkOut}
+                                    onChange={handleInput}
                                     type="date"
                                     name="checkOut"
                                     id="outdate"
@@ -100,17 +149,13 @@ export const Form = (props) => {
                                 />
                             </div>
                         </div>
-
-
                     </div>
-
-
-
                     <div>
                         <button
                             className="hover:shadow-form rounded-md bg-red-600 py-3 px-8 text-center text-base font-semibold text-white outline-none"
                         >
-                            <Link to="/reservations">Submit</Link>
+                            Submit
+
                         </button>
                     </div>
                 </form>

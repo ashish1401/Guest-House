@@ -19,6 +19,10 @@ customerRoute.get("/", function (req, res, next) {
 
 //Customer may post his/her booking as per requirements
 customerRoute.post("/", function (req, res, next) {
+    let startDate = req.body.checkIn;
+    let endDate = req.body.checkOut;
+    if (startDate >= endDate) return res.status(400).json({ message: "Enter Valid Date" });
+
     Room.findOne({ roomNum: req.body.roomNum }).exec().then(resp => {
         //check if room exists or not
         // console.log(resp);
@@ -36,8 +40,7 @@ customerRoute.post("/", function (req, res, next) {
     })
 
     //If the room exists, post the booking
-    let startDate = req.body.checkIn;
-    let endDate = req.body.checkOut;
+
 
     //Check if Booking dates overlap with exisiting bookings
     Booking.find({
@@ -54,8 +57,8 @@ customerRoute.post("/", function (req, res, next) {
     }).then(data => {
         if (data.length > 0) {
             //ROOM ALREADY BOOKED
-            return res.json({
-                message: "Room Booked for the time period, Select appropriate duration ",
+            return res.status(301).json({
+                message: "Room Booked for the time period || Select appropriate duration ",
             })
         }
         else {

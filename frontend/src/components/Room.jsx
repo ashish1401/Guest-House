@@ -23,7 +23,7 @@ export const Room = (props) => {
                         </div>
                         <div className='mt-10 mx-auto p-4'>
                             <h4><span className='text-red-600 font-bold'>Room Num : </span>{data?.roomNum}</h4>
-                            <p><span className='text-red-600 font-bold'>Description : </span> {data?.description}</p>
+                            <p><span className='text-red-600 font-bold'>Description : </span> {data?.description.substring(0, 20)}...</p>
                             <div><span className='text-red-600 font-bold'>Price : </span> {data?.price}</div>
                         </div>
 

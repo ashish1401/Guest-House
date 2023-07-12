@@ -5,8 +5,7 @@ const RoomsSchema = {
     roomNum: { type: String },
     roomType: { type: String },
     price: { type: Number },
-    checkIn: { type: Date, ref: 'customer' },
-    checkOut: { type: Date, ref: 'customer' }
+
 }
 const Room = mongoose.model("room", RoomsSchema);
 module.exports = { Room, RoomsSchema };
