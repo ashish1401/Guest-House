@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 export const Success = () => {
     const location = useLocation();
@@ -22,14 +22,16 @@ export const Success = () => {
                         Name : {response.name}
                     </li>
                     <li>
-                        Employee ID : {response.empID}
+                        Employee ID : {response.empId}
                     </li>
                     <li>
                         Reservation ID : {response.reservationId}
                     </li>
                 </ul>
-                <div className='h-auto bg-black mt-4 text-white p-4'>
-                    View your application at the following URL
+                <div className='h-auto bg-black mt-4 text-white'>
+                    <button className='p-4 w-full'>
+                        <Link to={`/customers/${response.empId}`} >View your application at the following URL </Link>
+                    </button>
                 </div>
             </div>
 

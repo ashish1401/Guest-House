@@ -32,7 +32,7 @@ bookingRoute.get("/", function (req, res, next) {
     })
 })
 
-//Protected Route
+//Protected Route --> Only two people can open this ? 1. Admin  2. Protected User  
 //view a particular reservation
 bookingRoute.get("/:resId", function (req, res, next) {
     Booking.find({ resId: req.params.resId }).exec().then(doc => {
@@ -57,6 +57,41 @@ bookingRoute.get("/:resId", function (req, res, next) {
         });
     })
 })
+
+bookingRoute.get("/reservations/:empId", function (req, res, next) {
+    Booking.find({ empId: req.params.empId }).exec().then(doc => {
+        if (doc) {
+            res.status(200).send(doc)
+        } else {
+            res.status(403).send({
+                error: "Invalid Employee ID",
+            })
+        }
+    }).catch(err => {
+        res.json({
+            error: err,
+        });
+    })
+})
+
+bookingRoute.get("/reservations/:empId/pending", function (req, res, next) {
+    Booking.find({ empId: req.params.empId, status: 1 }).exec().then(doc => {
+        if (doc) {
+            res.status(200).send(doc)
+        } else {
+            res.status(403).send({
+                error: "Invalid Employee ID",
+            })
+        }
+    }).catch(err => {
+        res.json({
+            error: err,
+        });
+    })
+})
+
+
+
 
 //Protected Route
 //Approve booking

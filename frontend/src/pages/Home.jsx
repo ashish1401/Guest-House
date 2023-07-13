@@ -1,10 +1,10 @@
 import React from 'react'
-import { Room } from '../components/Room'
+import { RoomCard } from '../components/RoomCard'
 
 export const Home = () => {
     return (
         <div>
-            <Room />
+            <RoomCard />
         </div>
     )
 }
