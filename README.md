@@ -3,7 +3,7 @@ An Ongoing project, that intends to automate the room booking process of a Guest
 
 ## Tech Stack
 
-**Client-Side:** None as of now
+**Client-Side:** ReactJS
 
 **Server:** Node, Express, MongoDB
 
