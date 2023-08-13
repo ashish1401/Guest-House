@@ -2,7 +2,9 @@ const { Booking } = require("../models/bookings.js");
 const express = require('express');
 const bookingRoute = express.Router();
 const mongoose = require('mongoose');
-
+const { Customer } = require("../models/customers.js");
+const checkCustomer = require("../middleware/check-customer.js");
+const Cookie = require("js-cookie");
 
 //Protected Route
 //view all bookings for admin
@@ -61,6 +63,8 @@ bookingRoute.get("/:resId", function (req, res, next) {
 bookingRoute.get("/reservations/:empId", function (req, res, next) {
     Booking.find({ empId: req.params.empId }).exec().then(doc => {
         if (doc) {
+            console.log(doc);
+
             res.status(200).send(doc)
         } else {
             res.status(403).send({
@@ -75,21 +79,47 @@ bookingRoute.get("/reservations/:empId", function (req, res, next) {
 })
 
 bookingRoute.get("/reservations/:empId/pending", function (req, res, next) {
-    Booking.find({ empId: req.params.empId, status: 1 }).exec().then(doc => {
-        if (doc) {
-            res.status(200).send(doc)
-        } else {
-            res.status(403).send({
-                error: "Invalid Employee ID",
-            })
-        }
-    }).catch(err => {
-        res.json({
-            error: err,
-        });
-    })
+    if (req.headers.empid === req.params.empId) {
+        Booking.find({ empId: req.params.empId, status: 1 }).exec().then(doc => {
+            if (doc) {
+                console.log(doc);
+                res.status(200).send(doc)
+            } else {
+                res.status(403).send({
+                    error: "Invalid Employee ID",
+                })
+            }
+        }).catch(err => {
+            res.json({
+                error: err,
+            });
+        })
+    } else {
+        res.send("Auth Failed")
+    }
 })
 
+bookingRoute.get("/reservations/:empId/confirmed", function (req, res, next) {
+
+    if (req.headers.empid === req.params.empId) {
+        Booking.find({ empId: req.params.empId, status: 2 }).exec().then(doc => {
+            if (doc) {
+                console.log(doc);
+                res.status(200).send(doc)
+            } else {
+                res.status(403).send({
+                    error: "Invalid Employee ID",
+                })
+            }
+        }).catch(err => {
+            res.json({
+                error: err,
+            });
+        })
+    } else {
+        res.send(false);
+    }
+})
 
 
 
@@ -98,15 +128,20 @@ bookingRoute.get("/reservations/:empId/pending", function (req, res, next) {
 bookingRoute.patch("/:resId", function (req, res, next) {
     if (req.body.status <= 2) {
         if (req.body.status == 0) {
-            Booking.deleteOne({ resId: req.params.resId }).then(data => {
-                res.status(201).json({
-                    Message: "Room declined",
+            Booking.deleteOne({ resId: req.params.resId }).exec()
+                .then(data => {
+                    res.status(201).json({
+                        Message: "Room declined",
+                    })
                 })
-            }).catch(err => {
-                res.status(500).json({
-                    error: err,
+                .then(() => {
+                    return Customer.deleteOne({ _id: req.params.resId });
+                }).catch(err => {
+                    res.status(500).json({
+                        error: err,
+                    })
                 })
-            })
+
         }
         else if (req.body.status == 2) {
             Booking.updateOne({ resId: req.params.resId }, { $set: { status: req.body.status } }).then(data => {

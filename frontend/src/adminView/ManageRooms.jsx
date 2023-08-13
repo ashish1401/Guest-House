@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { NavBar } from '../components/NavBar';
 import axios from "axios";
+import { Link } from 'react-router-dom';
 export const ManageRooms = () => {
     const [rooms, setRooms] = useState([]);
     const [submit, setSubmit] = useState(false);
@@ -37,6 +38,41 @@ export const ManageRooms = () => {
     return (
         <>
             <NavBar />
+
+            <div class="my-12 p-2">
+                <h1 className=' text-2xl my-4 md:text-5xl text-black text-center mx-auto font-bold '>  Listed Rooms </h1>
+
+                <table className='w-full p-2 border-[2px] border-black h-10 overflow-y-scroll'>
+                    <tr className='mx-auto text-center border-[2px] border-black'>
+                        <th className='mx-auto border-[2px] border-black'>Room ID</th>
+                        <th className='mx-auto border-[2px] border-black'>Room Number</th>
+                        <th className='mx-auto border-[2px] border-black'>Description</th>
+                        <th className='mx-auto border-[2px] border-black'>Price Per Night</th>
+
+                    </tr>
+                    {rooms.map(room => (
+                        <tr className='mx-auto text-center  p-10' key={room.roomId}>
+                            <td className='mx-auto border-[2px] border-black'>{room.roomId}</td>
+                            <td className='mx-auto border-[2px] border-black'>{room.roomNum}</td>
+                            <td className='mx-auto border-[2px] border-black'>{room.description}</td>
+                            <td className='mx-auto border-[2px] border-black'>{room.price}</td>
+
+                            <td className='p-4 border-b-[2px] border-black '>
+                                <Link to={`/admin/rooms/${room.roomNum}`}>
+                                    <button className='border-b-[2px] border-black hover:bg-black transition-all p-2 w-24 rounded-md bg-red-500 text-white'>
+                                        Edit
+                                    </button>
+                                </Link>
+                            </td>
+                            <td className='p-4 border-b-[2px] border-black '>
+                                <button className='border-b-[2px]  border-red-500 hover:bg-red-500 p-2 w-24 rounded-md bg-black text-white'>
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </table>
+            </div>
             <div className="my-12">
                 <h1 className=' text-2xl my-4 md:text-5xl text-black text-center mx-auto font-bold '> Add a Room </h1>
                 <div className="mx-auto w-full max-w-[550px] border-2 border-black p-4 rounded-md ">
@@ -72,7 +108,7 @@ export const ManageRooms = () => {
                                     >
                                         Enter Description
                                     </label>
-                                    <input
+                                    <textarea
                                         required
                                         value={post.roomType}
                                         onChange={handleInput}
@@ -81,7 +117,7 @@ export const ManageRooms = () => {
                                         id="roomType"
                                         placeholder="Enter a brief description for the room"
                                         className="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base h-32 font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
-                                    />
+                                    ></textarea>
                                 </div>
                             </div>
                         </div>
@@ -116,38 +152,6 @@ export const ManageRooms = () => {
                         </div>
                     </form>
                 </div>
-            </div>
-            <div class="my-12 p-2">
-                <h1 className=' text-2xl my-4 md:text-5xl text-black text-center mx-auto font-bold '>  Listed Rooms </h1>
-
-                <table className='w-full p-2 border-[2px] border-black'>
-                    <tr className='mx-auto text-center border-[2px] border-black'>
-                        <th className='mx-auto border-[2px] border-black'>Room ID</th>
-                        <th className='mx-auto border-[2px] border-black'>Room Number</th>
-                        <th className='mx-auto border-[2px] border-black'>Description</th>
-                        <th className='mx-auto border-[2px] border-black'>Price Per Night</th>
-
-                    </tr>
-                    {rooms.map(room => (
-                        <tr className='mx-auto text-center  p-10' key={room.roomId}>
-                            <td className='mx-auto border-[2px] border-black'>{room.roomId}</td>
-                            <td className='mx-auto border-[2px] border-black'>{room.roomNum}</td>
-                            <td className='mx-auto border-[2px] border-black'>{room.description}</td>
-                            <td className='mx-auto border-[2px] border-black'>{room.price}</td>
-
-                            <td className='p-4 border-b-[2px] border-black '>
-                                <button className='border-b-[2px] border-black hover:bg-black transition-all p-2 w-24 rounded-md bg-red-500 text-white'>
-                                    Edit
-                                </button>
-                            </td>
-                            <td className='border-b-[2px] border-black '>
-                                <button className='border-b-[2px]  border-red-500 hover:bg-red-500 p-2 w-24 rounded-md bg-black text-white'>
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </table>
             </div>
 
 

@@ -3,7 +3,7 @@ import React from 'react'
 export const BookingCard = (props) => {
     const data = props.data;
     return (
-        <div className='m-4 md:w-1/3 bg-red-500 rounded-md text-sm p-4'>
+        <div className='border-2 border-black m-4 md:w-1/3 bg-red-500 rounded-md text-sm p-4'>
             <ul>
                 <li>
                     <span className='font-bold'>Reservation ID</span> {data.resId}

@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 export const Success = () => {
     const location = useLocation();
     const props = location.state;
-    const response = props.newReservation;
+    const response = props.newReservation;//API
     return (
         <div className='md: grid  md:grid-cols-2 w-full bg-white '>
             <div className='w-full bg-red-600'>

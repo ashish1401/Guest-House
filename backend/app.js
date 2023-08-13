@@ -14,6 +14,7 @@ const morgan = require('morgan');
 
 //Setting up MongoDB
 const mongoose = require('mongoose');
+const userRoute = require('./api/control/user');
 mongoose.connect(`mongodb+srv://admin:admin@cluster0.tr5macg.mongodb.net/guestHouseDB`).then(resp => {
     console.log("Connected to Database");
 }).catch(err => {
@@ -34,10 +35,10 @@ app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
         "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization "
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization, EmpId "
     );
     if (req.method === "OPTIONS") {
-        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE ')
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET ')
     }
     next();
 })
@@ -46,6 +47,7 @@ app.use(function (req, res, next) {
 app.use('/customers', customerRoute);
 app.use('/rooms', roomRoute);
 app.use('/bookings', bookingRoute);
+app.use('/user', userRoute)
 
 //Invalid enpoints
 app.use(function (req, res, next) {

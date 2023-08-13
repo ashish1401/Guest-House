@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Cookie from 'js-cookie';
 export const Form = (props) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -25,7 +26,13 @@ export const Form = (props) => {
         console.log(post);
         // console.log(event.target);
         event.preventDefault();
-        axios.post("http://localhost:3001/customers", post).then(data => {
+        axios.post("http://localhost:3001/customers", post, {
+            headers: {
+                'authorization': `Bearer ${Cookie.get('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(data => {
             console.log(data.data);
             formState = true;
             navigate("/success", { state: data.data });

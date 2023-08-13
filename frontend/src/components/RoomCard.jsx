@@ -2,15 +2,28 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import Cookie from 'js-cookie';
 export const RoomCard = (props) => {
     const [room, setRoom] = useState([]);
-
+    const location = useLocation();
     useEffect(() => {
-        Axios.get("http://localhost:3001/rooms").then((response) => {
+
+        Axios.get("http://localhost:3001/rooms", {
+            // headers: {
+            //     "content-type": 'application/json;charset=UTF-8',
+            //     "Authorization": `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6I…zMTZ9.AcqjGs5xUBJpJnlA_2ZxbZ9EN1_JRuQMbGZVEKomHG4`,
+            // }
+            headers: {
+                'authorization': `Bearer ${Cookie.get('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
             setRoom(response.data.rooms);
             console.log(response.data?.rooms);
         })
+
     }, []);
     return (
         <div>

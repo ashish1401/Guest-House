@@ -20,11 +20,7 @@ export const DetailsCard = ({ roomNum, description, price }) => {
 
                 </li>
             </ul>
-            <div className='bg-red-600 w-1/3 rounded-sm text-white text-xl sm:text-3xl md:text-4xl  md:mt-32 p-4 '>
-                <button>
-                    <Link to="/customers" state={roomNum}>Book Now!</Link>
-                </button>
-            </div>
+
 
         </div>
     )

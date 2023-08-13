@@ -5,10 +5,12 @@ const mongoose = require('mongoose');
 //import Room and Booking Schema
 const { Room } = require("../models/rooms");
 const { Booking } = require("../models/bookings");
+const checkAuth = require('../middleware/check-auth');
 
 
 //display all rooms available for booking or taking reservations
-roomRoute.get("/", function (req, res, next) {
+roomRoute.get("/", checkAuth, function (req, res, next) {
+    console.log(req.query.checkIn);
     Room.find().exec().then(resp => {
         res.status(200).json(
             {
