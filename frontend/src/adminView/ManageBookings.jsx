@@ -5,6 +5,7 @@ import { NavBar } from '../components/NavBar.jsx';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import ReactTable from "react-table";
+import Cookie from 'js-cookie';
 export const ManageBookings = () => {
     const { variable } = useParams();
     const [bookings, setBookings] = useState([]);
@@ -12,7 +13,14 @@ export const ManageBookings = () => {
 
 
     useEffect(() => {
-        axios.get("http://localhost:3001/bookings").then(response => {
+        axios.get("http://localhost:3001/bookings", {
+            headers: {
+                'authorization': `Bearer ${Cookie.get('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'empId': `${Cookie.get('empId')}`
+            }
+        }).then(response => {
             console.log(response)
             setBookings(response.data.rooms);
         }).catch(err => {
@@ -23,7 +31,14 @@ export const ManageBookings = () => {
     function handleApprove(resId) {
         let val = window.confirm("APPROVE BOOKING?");
         if (val === true) {
-            axios.patch(`http://localhost:3001/bookings/${resId}`, { status: 2 })
+            axios.patch(`http://localhost:3001/bookings/${resId}`, { status: 2 }, {
+                headers: {
+                    'authorization': `Bearer ${Cookie.get('token')}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'empId': `${Cookie.get('empId')}`
+                }
+            })
                 .then(res => {
                     console.log(res);
                     window.alert("Request approved, please refresh");
@@ -42,7 +57,14 @@ export const ManageBookings = () => {
     function handleDelete(resId) {
         let val = window.confirm("DELETE BOOKING?");
         if (val === true) {
-            axios.patch(`http://localhost:3001/bookings/${resId}`, { status: 0 })
+            axios.patch(`http://localhost:3001/bookings/${resId}`, { status: 0 }, {
+                headers: {
+                    'authorization': `Bearer ${Cookie.get('token')}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'empId': `${Cookie.get('empId')}`
+                }
+            })
                 .then(res => {
                     console.log(res);
                     window.alert("Request deleted, please refresh");

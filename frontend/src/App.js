@@ -14,6 +14,7 @@ import { ManageRooms } from "./adminView/ManageRooms";
 import EditRoom from "./adminView/EditRoom";
 import { LogIn } from "./pages/LogIn";
 import { SignUp } from "./pages/SignUp";
+import { Admin } from "./adminView/Admin";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         </Route>
 
         <Route path='/admin' >
+          <Route path={''} element={<Admin />} />
           <Route path={'bookings'} element={<ManageBookings />} />
           <Route path={`rooms`}>
             <Route path='' element={<ManageRooms />} />

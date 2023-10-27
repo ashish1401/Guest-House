@@ -13,7 +13,8 @@ export const Details = (props) => {
             headers: {
                 'authorization': `Bearer ${Cookie.get('token')}`,
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'empId': `${Cookie.get('empId')}`
             }
         }).then((response) => {
             const data = response.data.rooms;

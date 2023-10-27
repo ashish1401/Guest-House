@@ -3,11 +3,11 @@ const bcrypt = require('bcrypt');
 const userRoute = express.Router();
 const mongoose = require('mongoose');
 
-const Account = require("../models/account.js");
+const { User } = require("../models/account.js");
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
 userRoute.post("/signup", function (req, res, next) {
-    Account.find({ email: req.body.email })
+    User.find({ email: req.body.email })
         .exec()
         .then(resp => {
             if (resp.length >= 1) {
@@ -21,7 +21,7 @@ userRoute.post("/signup", function (req, res, next) {
                             error: err,
                         });
                     } else {
-                        const entry = new Account({
+                        const entry = new User({
                             email: req.body.email,
                             password: hash,
                             empId: req.body.empId,
@@ -52,7 +52,7 @@ userRoute.post("/signup", function (req, res, next) {
 )
 userRoute.post("/login", function (req, res, next) {
     //id user logs in we create a jwt for em 
-    Account.find({ email: req.body.email, empId: req.body.empId })
+    User.find({ email: req.body.email, empId: req.body.empId })
         .then(user => {
             //the following method  avoids any brute forcr attacks by distinguishing unavailabilty of mail id as Auth failed , so pass could be wrong 
             if (user.length < 1) {
@@ -96,7 +96,7 @@ userRoute.post("/login", function (req, res, next) {
         )
 })
 userRoute.delete("/:userId", function (req, res, next) {
-    Account.deleteOne({ _id: req.params.userId }).exec() //safe as the userId can only be obtained on loggin in
+    User.deleteOne({ _id: req.params.userId }).exec() //safe as the userId can only be obtained on loggin in
         .then(resp => {
             res.status(200).json({
                 message: "Account deleted successfully",

@@ -5,10 +5,11 @@ const mongoose = require('mongoose');
 const { Customer } = require("../models/customers.js");
 const checkCustomer = require("../middleware/check-customer.js");
 const Cookie = require("js-cookie");
+const checkAuth = require("../middleware/check-auth.js");
 
 //Protected Route
 //view all bookings for admin
-bookingRoute.get("/", function (req, res, next) {
+bookingRoute.get("/", checkCustomer, function (req, res, next) {
     //display all bookings with status:1 i.e waiting for approval
     Booking.find().exec().then(resp => {
         res.status(200).json(
@@ -60,7 +61,7 @@ bookingRoute.get("/:resId", function (req, res, next) {
     })
 })
 
-bookingRoute.get("/reservations/:empId", function (req, res, next) {
+bookingRoute.get("/reservations/:empId", checkAuth, function (req, res, next) {
     Booking.find({ empId: req.params.empId }).exec().then(doc => {
         if (doc) {
             console.log(doc);
@@ -78,7 +79,7 @@ bookingRoute.get("/reservations/:empId", function (req, res, next) {
     })
 })
 
-bookingRoute.get("/reservations/:empId/pending", function (req, res, next) {
+bookingRoute.get("/reservations/:empId/pending", checkAuth, function (req, res, next) {
     if (req.headers.empid === req.params.empId) {
         Booking.find({ empId: req.params.empId, status: 1 }).exec().then(doc => {
             if (doc) {
@@ -99,7 +100,7 @@ bookingRoute.get("/reservations/:empId/pending", function (req, res, next) {
     }
 })
 
-bookingRoute.get("/reservations/:empId/confirmed", function (req, res, next) {
+bookingRoute.get("/reservations/:empId/confirmed", checkAuth, function (req, res, next) {
 
     if (req.headers.empid === req.params.empId) {
         Booking.find({ empId: req.params.empId, status: 2 }).exec().then(doc => {

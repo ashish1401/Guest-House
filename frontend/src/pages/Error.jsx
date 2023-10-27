@@ -10,7 +10,7 @@ export const Error = () => {
                 <img src="../images/error.png" alt="" className='mx-auto w-full' />
             </div>
             <div className='m-auto  '>
-                <h1 className='text-3xl md:text-6xl text-black p-4 mx-auto font-bold'> {props || "Cannot Book Room, Enter details carefully"}</h1>
+                <h1 className='text-3xl md:text-6xl text-black p-4 mx-auto font-bold'> {props}</h1>
             </div>
 
         </div>

@@ -2,11 +2,12 @@ import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Cookie from 'js-cookie';
 export const RoomCard = (props) => {
     const [room, setRoom] = useState([]);
     const location = useLocation();
+    const navigate = useNavigate();
     useEffect(() => {
 
         Axios.get("http://localhost:3001/rooms", {
@@ -17,11 +18,19 @@ export const RoomCard = (props) => {
             headers: {
                 'authorization': `Bearer ${Cookie.get('token')}`,
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'empId': `${Cookie.get('empId')}`
             }
         }).then((response) => {
+            // console.log(response)
             setRoom(response.data.rooms);
             console.log(response.data?.rooms);
+        }).catch(err => {
+            if ((err.response.status) === 401) {
+                window.alert("Please login");
+                navigate("/login");
+
+            };
         })
 
     }, []);

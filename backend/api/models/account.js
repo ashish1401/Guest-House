@@ -12,4 +12,5 @@ const AccountSchema = {
 
 }
 
-module.exports = mongoose.model('user', AccountSchema);
+const User = mongoose.model('user', AccountSchema);
+module.exports = { User };

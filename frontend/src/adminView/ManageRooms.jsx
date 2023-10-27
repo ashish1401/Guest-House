@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavBar } from '../components/NavBar';
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import Cookie from 'js-cookie';
 export const ManageRooms = () => {
     const [rooms, setRooms] = useState([]);
     const [submit, setSubmit] = useState(false);
@@ -10,8 +11,17 @@ export const ManageRooms = () => {
         roomType: "",
         price: ""
     })
+
     useEffect(() => {
-        axios.get("http://localhost:3001/rooms").then(data => {
+        axios.get("http://localhost:3001/rooms", {
+            headers: {
+                'authorization': `Bearer ${Cookie.get('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'empId': `${Cookie.get('empId')}`
+
+            }
+        }).then(data => {
             setRooms(data.data.rooms);
         }).catch(err => {
             console.log(err);
@@ -26,7 +36,15 @@ export const ManageRooms = () => {
         setSubmit(true);
         event.preventDefault();
         setPost(post);
-        axios.post("http://localhost:3001/rooms", post).then(response => {
+        axios.post("http://localhost:3001/rooms", post, {
+            headers: {
+                'authorization': `Bearer ${Cookie.get('token')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'empId': `${Cookie.get('empId')}`
+
+            }
+        }).then(response => {
             console.log(response);
         }).catch(err => {
             console.log(err);

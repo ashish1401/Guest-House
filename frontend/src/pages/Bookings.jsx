@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useLocation, useParams } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { BookingCard } from '../components/BookingCard';
 import { StatusCard } from '../components/StatusCard';
 import Cookie from 'js-cookie';
+import { LogIn } from './LogIn';
 
 export const Bookings = () => {
-
+    const navigate = useNavigate();
     const [pending, setPending] = useState([]);
     const [confirmed, setConfirmed] = useState([]);
     const { empId } = useParams();
     // console.log(empId);
-
-    const pendingUrl = "http://localhost:3001/bookings/reservations/" + empId + "/pending";
-    const confirmedUrl = "http://localhost:3001/bookings/reservations/" + empId + "/confirmed";
+    let pendingUrl = [""];
+    let confirmedUrl = [""];
+    if (Cookie.get('empId') === empId) {
+        pendingUrl = "http://localhost:3001/bookings/reservations/" + empId + "/pending";
+        confirmedUrl = "http://localhost:3001/bookings/reservations/" + empId + "/confirmed";
+    }
+    else {
+        navigate("/err", { state: "Unavailable" });
+    }
     const endpoints = [pendingUrl, confirmedUrl];
-    // console.log(Cookie.get('empId'));
+
     useEffect(() => {
+        if (!Cookie.get('empId')) {
+            window.alert("Please LogIn");
+            navigate("/login");
+        };
         axios.all(endpoints.map(endpoint => axios.get(endpoint, {
             headers: {
                 'authorization': `Bearer ${Cookie.get('token')}`,
